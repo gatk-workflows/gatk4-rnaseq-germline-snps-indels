@@ -2,7 +2,7 @@
 Workflows for processing RNA data for germline short variant discovery with GATK v4 and related tools
 
 ### Requirements/expectations :
- - BAM 
+ - uBAM 
 
 ### Output :
  - A BAM file and its index.
