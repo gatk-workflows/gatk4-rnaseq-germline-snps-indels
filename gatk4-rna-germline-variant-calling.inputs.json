@@ -1,6 +1,6 @@
 {
   "##_COMMENT1": "Input",
-  "RNAseq.inputBam": "gs://gatk-test-data/rna_bam/NA12878_b37/NA12878.bam",
+  "RNAseq.inputBam": "gs://gatk-test-data/rna_bam/NA12878_b37/NA12878.unmapped.bam",
   
   "##_COMMENT2": "REFERENCE FILES",
   "RNAseq.refFasta": "gs://broad-references/Homo_sapiens_assembly19_1000genomes_decoy/Homo_sapiens_assembly19_1000genomes_decoy.fasta",
