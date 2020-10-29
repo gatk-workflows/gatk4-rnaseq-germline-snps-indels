@@ -266,9 +266,9 @@ task gtfToCallingIntervals {
 
         ${gatk_path} \
             BedToIntervalList \
-            -I=exome.fixed.bed \
-            -O=${output_name} \
-            -SD=${ref_dict}
+            -I exome.fixed.bed \
+            -O ${output_name} \
+            -SD ${ref_dict}
     >>>
 
     output {
@@ -718,7 +718,7 @@ task MergeVCFs {
     command <<<
         ${gatk_path} --java-options "-Xms2000m"  \
             MergeVcfs \
-            --INPUT ${sep=' --INPUT=' input_vcfs} \
+            --INPUT ${sep=' --INPUT ' input_vcfs} \
             --OUTPUT ${output_vcf_name}
     >>>
 
@@ -748,12 +748,12 @@ task ScatterIntervalList {
         mkdir out
         ${gatk_path} --java-options "-Xms1g" \
             IntervalListTools \
-            --SCATTER_COUNT=${scatter_count} \
-            --SUBDIVISION_MODE=BALANCING_WITHOUT_INTERVAL_SUBDIVISION_WITH_OVERFLOW \
-            --UNIQUE=true \
-            --SORT=true \
-            --INPUT=${interval_list} \
-            --OUTPUT=out
+            --SCATTER_COUNT ${scatter_count} \
+            --SUBDIVISION_MODE BALANCING_WITHOUT_INTERVAL_SUBDIVISION_WITH_OVERFLOW \
+            --UNIQUE true \
+            --SORT true \
+            --INPUT ${interval_list} \
+            --OUTPUT out
 	
         python3 <<CODE
         import glob, os
