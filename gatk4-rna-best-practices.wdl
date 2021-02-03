@@ -439,7 +439,6 @@ task MergeBamAlignment {
             --ALIGNED_BAM ${star_bam} \
             --OUTPUT ${base_name}.bam \
             --INCLUDE_SECONDARY_ALIGNMENTS false \
-            --PAIRED_RUN False \
             --VALIDATION_STRINGENCY SILENT
     >>>
  
