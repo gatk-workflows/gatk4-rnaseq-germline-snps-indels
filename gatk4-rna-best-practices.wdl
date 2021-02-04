@@ -439,7 +439,6 @@ task MergeBamAlignment {
             --ALIGNED_BAM ${star_bam} \
             --OUTPUT ${base_name}.bam \
             --INCLUDE_SECONDARY_ALIGNMENTS false \
-            --PAIRED_RUN False \
             --VALIDATION_STRINGENCY SILENT
     >>>
  
@@ -764,6 +763,8 @@ task ScatterIntervalList {
           newName = os.path.join(directory, str(i + 1) + filename)
           os.rename(interval, newName)
         print(len(intervals))
+        if len(intervals) == 0:
+          raise ValueError("Interval list produced 0 scattered interval lists. Is the gtf or input interval list empty?")
         f = open("interval_count.txt", "w+")
         f.write(str(len(intervals)))
         f.close()
