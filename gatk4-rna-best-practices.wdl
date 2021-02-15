@@ -257,7 +257,7 @@ task gtfToCallingIntervals {
 
     command <<<
 
-	set -e
+        set -e
 
         Rscript --no-save -<<'RCODE'
             gtf = read.table("${gtf}", sep="\t")
