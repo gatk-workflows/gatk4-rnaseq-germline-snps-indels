@@ -132,7 +132,6 @@
 			gatk_path = gatk_path
 	}
 
-
     call SplitNCigarReads {
         input:
             input_bam = MarkDuplicates.output_bam,
@@ -147,11 +146,19 @@
             gatk_path = gatk_path
     }
 
+    call AddOrReplaceReadGroups {
+	    input:
+            input_bam = SplitNCigarReads.output_bam,
+            input_bam_index = SplitNCigarReads.output_bam_index,
+            arg_output_file = sampleName + ".SplitNCigarReads.read-group",
+            gatk_path = gatk_path,
+            docker = gatk4_docker,
+            preemptible_count = preemptible_count
+	}
 
 	call BaseRecalibrator {
 		input:
-			input_bam = SplitNCigarReads.output_bam,
-			input_bam_index = SplitNCigarReads.output_bam_index,
+			input_bam = AddOrReplaceReadGroups.output_bam,
 			recal_output_file = sampleName + ".recal_data.csv",
   			dbSNP_vcf = dbSnpVcf,
   			dbSNP_vcf_index = dbSnpVcfIndex,
@@ -167,8 +174,7 @@
 
 	call ApplyBQSR {
 		input:
-			input_bam =  SplitNCigarReads.output_bam,
-			input_bam_index = SplitNCigarReads.output_bam_index,
+			input_bam =  AddOrReplaceReadGroups.output_bam,
 			base_name = sampleName + ".aligned.duplicates_marked.recalibrated",
 			ref_fasta = refFasta,
 			ref_fasta_index = refFastaIndex,
@@ -527,10 +533,43 @@ task SplitNCigarReads {
     }
 }
 
+task AddOrReplaceReadGroups {
+    File input_bam
+    File input_bam_index
+    String arg_output_file
+
+    String gatk_path
+
+    String docker
+    Int preemptible_count
+
+    command <<<
+        ${gatk_path} \
+            AddOrReplaceReadGroups \
+            -I ${input_bam} \
+            -O ${arg_output_file}.bam \
+            --RGSM sample \
+            --RGPU unit \
+            --RGID groupID \
+            --RGLB lib \
+            --RGPL Illumina
+    >>>
+
+    output {
+        File output_bam = "${arg_output_file}.bam"
+    }
+
+    runtime {
+        memory: "6 GB"
+        disks: "local-disk " + sub((size(input_bam,"GB")*3)+30, "\\..*", "") + " HDD"
+        docker: docker
+        preemptible: preemptible_count
+    }
+}
+
 task BaseRecalibrator {
 
     File input_bam
-    File input_bam_index
     String recal_output_file
 
     File dbSNP_vcf
@@ -576,7 +615,6 @@ task BaseRecalibrator {
 task ApplyBQSR {
 
     File input_bam
-    File input_bam_index
     String base_name
     File recalibration_report
 
