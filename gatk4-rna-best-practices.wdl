@@ -141,7 +141,6 @@
             ref_fasta = refFasta,
             ref_fasta_index = refFastaIndex,
             ref_dict = refDict,
-            interval_list = gtfToCallingIntervals.interval_list,
             preemptible_count = preemptible_count,
             docker = gatk4_docker,
             gatk_path = gatk_path
@@ -496,7 +495,6 @@ task SplitNCigarReads {
   File input_bam
   File input_bam_index
   String base_name
-  File interval_list
 
   File ref_fasta
   File ref_fasta_index
