@@ -1,0 +1,7 @@
+version: 1.2
+workflows:
+   - name: gatk4-rnaseq-germline-snps-indels
+     subclass: WDL
+     primaryDescriptorPath: /gatk4-rna-best-practices.wdl
+     testParameterFiles:
+     -  /gatk4-rna-germline-variant-calling.inputs.json
