@@ -258,13 +258,7 @@ task gtfToCallingIntervals {
 
         set -e
 
-        Rscript --no-save -<<'RCODE'
-            gtf = read.table("${gtf}", sep="\t")
-            gtf = subset(gtf, V3 == "exon")
-            write.table(data.frame(chrom=gtf[,'V1'], start=gtf[,'V4'], end=gtf[,'V5']), "exome.bed", quote = F, sep="\t", col.names = F, row.names = F)
-        RCODE
-
-        awk '{print $1 "\t" ($2 - 1) "\t" $3}' exome.bed > exome.fixed.bed
+        awk -F '\t' '($3=="exon") {printf("%s\t%d\t%s\n", $1, int($4) - 1, $5);}' "${gtf}" > exome.fixed.bed
 
         ${gatk_path} \
             BedToIntervalList \
